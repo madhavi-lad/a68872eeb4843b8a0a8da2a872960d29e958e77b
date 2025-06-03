@@ -4,21 +4,50 @@
     </head>
 
     <body>
-        <form action="http://127.0.0.1:8000/user" method="post">
-            <input type="text" placeholder="Enter Your Name"/>
+
+        <script>
+
+            function createUser(){
+                var Name = document.getElementById("NAME").value
+                var Email = document.getElementById("EMAIL").value
+                var Password = document.getElementById("PASSWORD").value
+                var Phone = document.getElementById("PHONE").value
+
+                fetch("http://127.0.0.1:8000/user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: Name,
+                        email: Email,
+                        password: Password,
+                        phone: Phone,
+                    })
+                }).then((res) => res.json()).then((result) => {
+                    const res = JSON.stringify(result)
+                    document.getElementById("RESPONSE").innerHTML = res
+                })
+            }
+        </script>
+
+        <div>
+            <input id="NAME" type="text" placeholder="Enter Your Name"/>
             <br> <br>
 
-            <input type="email" placeholder="Enter Your Email"/>
+            <input id="EMAIL" type="email" placeholder="Enter Your Email"/>
             <br> <br>
 
-            <input type="password" placeholder="Enter Your Password"/>
+            <input id="PASSWORD" type="password" placeholder="Enter Your Password"/>
             <br> <br>
 
-            <input type="number" placeholder="Enter Your Mobile No."/>
+            <input id="PHONE" type="number" placeholder="Enter Your Mobile No."/>
             <br> <br>
 
-            <button type="submit"> Signup </button>
+            <button type="submit" onclick="createUser()"> Signup </button>
             
-        </form>
+        </div>
+
+        <p id="RESPONSE"> </p>
     </body>
 </html>
