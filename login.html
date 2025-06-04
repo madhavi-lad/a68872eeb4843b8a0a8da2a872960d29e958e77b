@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +8,14 @@
             
             .box{
                 margin-left: 38%;
-                width:24%;
+                width:35%;
                 margin-right: 38%;
                 margin-top: 12%;
-                height:70%;
+                height:50%;
                 margin-bottom: 10%;
-                border: 4px solid rgb(21, 21, 190);
+                border: 4px solid navy;
                 color: white;
-                background: rgb(207, 232, 243);
+                background: rgb(210, 230, 238);
                 display: inline-grid;
                 justify-content: space-evenly;
                 justify-items: center;
@@ -24,24 +23,71 @@
             }
 
             .button{
-                background: rgb(1, 1, 140);
+                background: navy;
                 color: white;
                 border-radius: 4px;
                 height: 30px;
                 width: 70px;
+                margin-bottom: 10%;
+            }
+
+            p{
+                color: navy;
+            }
+
+            a{
                 margin-bottom: 15%;
             }
         </style>
 </head>
 <body>
 
-    <div class="box">  
-        <h2 style="color: rgb(1, 1, 140)"> Login </h2>
-        <input type="text" placeholder="Enter Your Name" /> <br> 
-        
-        <input type="email" placeholder="Enter Your Email" /> <br> 
+    <script>
 
-        <button class="button" type="submit"> Login </button>
+            async function validateUser(){
+                var Email = document.getElementById("EMAIL").value
+                var Password = document.getElementById("PASSWORD").value
+                
+
+                const response = await fetch("http://127.0.0.1:8000/token", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: Email,
+                        password: Password
+                    })
+                })
+                
+                if(response.status === 200){
+                    const data = await response.json()
+                    localStorage.setItem("Token", data.token)
+                    window.location.href = "dashboard.html"
+                }
+
+                else{
+                    const res = await response.json()
+                    const error = JSON.stringify(res)
+                    document.getElementById("RESPONSE").innerHTML = error
+                }
+
+            }
+    </script>
+
+
+    <div class="box">  
+        <h2 style="color: navy"> Login </h2>
+        
+        <input id="EMAIL" type="email" placeholder="Enter Your Email" /> <br> 
+
+        <input id="PASSWORD" type="password" placeholder="Enter Your Password" /> <br> 
+
+        <button class="button" type="submit" onclick="validateUser()"> Login </button>
+
+        <p id="RESPONSE"> Don't have an account? 
+        <a href="signup.html"> Signup </a>
+        </p> 
     </div>
     
 </body>
