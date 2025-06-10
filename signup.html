@@ -1,9 +1,32 @@
 <html>
     <head>
         <title> User Signup Page</title>
-    </head>
 
-    <body>
+        <style>
+            .box{
+                margin-left: 38%;
+                width:24%;
+                margin-right: 38%;
+                margin-top: 10%;
+                height: 55%;
+                margin-bottom: 10%;
+                border: 4px solid rgb(21, 21, 190);
+                color: white;
+                background: rgb(185, 232, 251);
+                justify-content: center;
+                justify-items: center;
+                font-size: large;
+            }
+
+            .button{
+                background: rgb(1, 1, 140);
+                color: white;
+                border-radius: 4px;
+                height: 30px;
+                width: 70px;
+                margin-left: 30%;
+            }
+        </style>
 
         <script>
 
@@ -31,7 +54,14 @@
             }
         </script>
 
-        <div>
+    </head>
+
+    <body>
+
+        
+        <div class="box">
+            <h2 style="color:rgb(1, 1, 140)"> Sign up</h2>
+
             <input id="NAME" type="text" placeholder="Enter Your Name"/>
             <br> <br>
 
@@ -44,10 +74,12 @@
             <input id="PHONE" type="number" placeholder="Enter Your Mobile No."/>
             <br> <br>
 
-            <button type="submit" onclick="createUser()"> Signup </button>
+            <button class="button" type="submit" onclick="createUser()"> Signup </button>
+
+            <p id="RESPONSE"> </p>
             
         </div>
 
-        <p id="RESPONSE"> </p>
+        
     </body>
 </html>

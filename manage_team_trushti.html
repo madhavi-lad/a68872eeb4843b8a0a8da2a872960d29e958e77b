@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Team Management</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .team-card {
+      margin: 40px auto;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .card-img-top {
+      height: 200px;
+      object-fit: contain;
+      background-color: #fff;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="owner"></div>
+  </div>
+
+  <script>
+    async function manage() {
+      const response = await fetch("http://127.0.0.1:8000/manageTeam", {
+        headers: {
+          'Content-Type': 'application/json',
+          token: localStorage.getItem('Token')
+        }
+      });
+
+      const data = await response.json();
+
+      const card = `
+        <div class="card team-card">
+          <img src="${data.profile}" class="card-img-top" alt="${data.name}">
+          <div class="card-body">
+            <form onsubmit="return updateTeam(event)">
+              <input type="hidden" id="id" value="${data.id}">
+              <div class="mb-3">
+                <label class="form-label">Team Name</label>
+                <input type="text" class="form-control" id="name" value="${data.name}">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Slogan</label>
+                <input type="text" class="form-control" id="slogan" value="${data.slogan}">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Region</label>
+                <input type="text" class="form-control" id="region" value="${data.region}">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Image URL</label>
+                <input type="text" class="form-control" id="profile" value="${data.profile}">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Update Team</button>
+            </form>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("owner").innerHTML = card;
+    }
+
+    async function updateTeam(event) {
+      event.preventDefault(); // ✅ prevent form reload
+
+      const updatedData = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value,
+        slogan: document.getElementById("slogan").value,
+        region: document.getElementById("region").value,
+        profile: document.getElementById("profile").value
+      };
+
+      const response = await fetch("http://127.0.0.1:8000/update", {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ updatedData }) // ✅ send wrapped data
+      });
+
+      const result = await response.json();
+      //alert(result.message || "Updated successfully!");
+
+      manage(); // reload updated values
+    }
+
+  // Load the form initially
+    manage();
+  </script>
+</body>
+</html>

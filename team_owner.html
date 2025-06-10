@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Manage Team </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+
+    <script> 
+
+        async function update(event){
+            event.preventDefault();
+
+            console.log("update called")
+            const getLogo = document.getElementById("LOGO").value
+            const getTeam = document.getElementById("TEAMNAME").value
+            const getOwner = document.getElementById("OWNERNAME").value
+            const getColor = document.getElementById("COLOR").value
+
+            const response = await fetch("http://127.0.0.1:8000/update", 
+            {
+                method: 'PUT',
+
+                headers: {
+                    "Content-Type": "application/json",
+                    team_id: document.getElementById("TEAMID").value
+                },
+
+                body: JSON.stringify({
+                    logo: getLogo,
+                    name: getTeam,
+                    owner: getOwner,
+                    color: getColor
+                })
+
+            })
+
+            const data = await response.json()
+            
+            if(response.status === 200){
+                document.getElementById("RESPONSE").innerHTML = "UPDATED"
+            }
+            else{
+                document.getElementById("RESPONSE").innerHTML = "NOT UPDATED"
+            }
+
+            manageTeam()
+
+        }
+
+
+        async function manageTeam(){
+
+            const response = await fetch("http://127.0.0.1:8000/manageTeam", {
+                headers: {
+                    "Content-Type": "application/json",
+                    token: localStorage.getItem("Token")
+                }
+            })
+
+            const data = await response.json()
+
+            if(response.status === 200){
+                
+                const teamCard = `<div class="card ms-5" style="width: 36rem;">
+                                    <img src="${data.logo}" class="card-img-top" alt="Team logo">
+                                    <input type="text" class="form-control" id="LOGO" aria-describedby="emailHelp" value="${data.logo}">
+                                        <form>
+                                        <div class="mb-3">
+                                            
+                                            <label class="form-label"> <b> Team id </b> </label>
+                                            <input type="text" class="form-control" id="TEAMID" value="${data.team_id}" disabled>
+
+                                            <label class="form-label"> Name </label>
+                                            <input type="text" class="form-control" id="TEAMNAME" aria-describedby="emailHelp" value="${data.name}">
+
+                                            <label class="form-label"> Owner Name </label>
+                                            <input type="text" class="form-control" id="OWNERNAME" aria-describedby="emailHelp" value="${data.owner}">
+
+                                            <label class="form-label"> Color </label>
+                                            <input type="text" class="form-control" id="COLOR" aria-describedby="emailHelp" value="${data.color}">
+                                        </div>
+                                        </form>
+                                        <button type="submit" class="btn btn-primary" onclick="update(event)"> Update </button>
+                                    
+                                </div>`
+
+                document.getElementById("CARD").innerHTML = teamCard
+
+                
+            }
+            else{
+                document.getElementById("RESPONSE").innerHTML = JSON.stringify(response)
+            }
+        }
+
+        manageTeam()
+
+    </script>
+</head>
+<body>
+    <p id="RESPONSE"> </p>
+
+    <div id="CARD"> 
+
+    </div>
+
+</body>
+</html>
